@@ -1,4 +1,4 @@
 export class SendMoneyDTO {
-  userID: number;
+  userId: string;
   cost: number;
 }

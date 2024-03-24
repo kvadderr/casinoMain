@@ -22,7 +22,7 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  async findOneById(id: number): Promise<UserResponse> {
+  async findOneById(id: string): Promise<UserResponse> {
     return await this.usersRepository.findOne({
       where: { id },
     });
@@ -47,7 +47,7 @@ export class UserService {
     if (isNaN(transfer.cost) || transfer.cost < 0 || isNaN(currentUser.balance)) {
       throw new Error('Недостаточно средств');
     }
-    const user = await this.findOneById(transfer.userID);
+    const user = await this.findOneById(transfer.userId);
     if (!user) throw new Error('Пользователь не найден');
     if (isNaN(user.balance)) throw new Error('Invalid recipient balance');
     currentUser.balance -= transfer.cost;

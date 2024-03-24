@@ -21,7 +21,7 @@ export class AuthService {
         });
     }
 
-    assignTokens(userId: number, role: UserRole) {
+    assignTokens(userId: string, role: UserRole) {
         return {
             accessToken: this.createAccessToken({ userId, role }),
             refreshToken: this.createRefreshToken({ userId }),

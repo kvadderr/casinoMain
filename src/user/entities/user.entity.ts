@@ -13,8 +13,8 @@ import { UserRole } from 'src/constants';
 export class User {
 
   @ApiProperty({ example: 1 })
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn('uuid')
+	id: string
 
 	@ApiProperty({ example: "Alexey" })
 	@Column({nullable: true})

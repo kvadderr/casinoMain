@@ -34,8 +34,8 @@ export class GamesService {
       language: "ru",
       key: process.env.HALL_KEY,
       demo: 1,
-      login: data.userID,
-      gameId: data.gameID
+      login: data.userId,
+      gameId: data.gameId
     }
     console.log(requestBody)
     const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
