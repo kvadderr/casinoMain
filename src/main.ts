@@ -16,7 +16,7 @@ async function bootstrap() {
   SwaggerModule.setup("swagger", app, document)
 
   app.enableCors({
-    origin: 'http://91.201.52.126',
+    origin: 'http://lotos.na4u.ru/',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
