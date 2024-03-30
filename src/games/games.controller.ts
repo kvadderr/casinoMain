@@ -12,12 +12,12 @@ export class GamesController {
     return await this.gamesService.getData();
   }
 
-  @Get('/gameLink')
+  @Post('/gameLink')
   async getGameLink(@Body() getLink: getLinkDTO) {
     return await this.gamesService.openGame(getLink);
   }
 
-  @Post()
+  @Post('/update')
   async fetchData() {
     return await this.gamesService.fetchData();
   }
