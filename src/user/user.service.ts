@@ -22,6 +22,11 @@ export class UserService {
     return this.usersRepository.find();
   }
 
+  async getBalance(id: string) {
+    const user = await this.findOneById(id);
+    return user.balance.toFixed(2);
+  }
+
   async findOneById(id: string): Promise<UserResponse> {
     return await this.usersRepository.findOne({
       where: { id },

@@ -1,15 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Req, NotFoundException, UnauthorizedException, BadRequestException, BadGatewayException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Req, NotFoundException, UnauthorizedException, BadRequestException, BadGatewayException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { SendMoneyDTO } from './decorators/sendMoney.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-  
+  constructor(private readonly userService: UserService) { }
+
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+
+  @Post()
+  async userDataControl(@Body() data: any) {
+    const cmd = data.cmd;
+    if (data.key !== process.env.HALL_KEY) return (
+      {
+        "status": "fail",
+        "error": "ERROR CODE"
+      }
+    )
+    if (cmd === 'getBalance') {
+      const balance = await this.userService.getBalance(cmd.login);
+      return ({
+        "status": "success",
+        "error": "",
+        "login": cmd.login,
+        "balance": balance,
+        "currency": "RUB"
+      })
+    }
+
+    if (cmd === 'writeBet') {
+      const balance = await this.userService.getBalance(cmd.login);
+      return ({
+        "status": "success",
+        "error": "",
+        "login": cmd.login,
+        "balance": balance,
+        "currency": "RUB"
+      })
+    }
+
   }
 
   @Get('/me')

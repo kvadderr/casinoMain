@@ -3,12 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 
-import { User } from './user/entities/user.entity';
 import { UsersModule } from './user/user.module';
 import { AuthMiddleware } from './auth/middleware/auth.middleware';
 import { GamesService } from './games/games.service';
 import { GamesModule } from './games/games.module';
 import { RedisService } from './redis/redis.service';
+import { FreespinModule } from './freespin/freespin.module';
+
+import { User } from './user/entities/user.entity';
+import { Freespin } from './freespin/entities/freespin.entity';
 
 @Module({
   imports: [
@@ -25,6 +28,7 @@ import { RedisService } from './redis/redis.service';
       username: 'postgres',
       entities: [
         User,
+        Freespin
       ],
       database: 'casino',
       synchronize: true,
@@ -32,6 +36,7 @@ import { RedisService } from './redis/redis.service';
     }),
     UsersModule,
     GamesModule,
+    FreespinModule,
   ],
   controllers: [],
   providers: [GamesService, RedisService],
