@@ -14,8 +14,8 @@ export class UserService {
     private readonly usersRepository: Repository<User>
   ) { }
 
-  saveUser(createUserDto: Partial<User>) {
-    return this.usersRepository.save(createUserDto)
+  async saveUser(createUserDto: Partial<User>) {
+    return await this.usersRepository.save(createUserDto)
   }
 
   findAll() {
