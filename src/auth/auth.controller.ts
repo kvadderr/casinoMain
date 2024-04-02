@@ -36,6 +36,7 @@ export class AuthController {
       console.log(saltRounds)
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       console.log(hashedPassword)
+      console.log('registerUserDto', registerUserDto)
       const user = await this.userService.saveUser({
         ...registerUserDto,
         password: hashedPassword,
