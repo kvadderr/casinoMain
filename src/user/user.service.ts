@@ -24,6 +24,9 @@ export class UserService {
 
   async getBalance(id: string) {
     const user = await this.findOneById(id);
+    if (!user) {
+      throw new Error('User not found'); // Или возвращать ошибку в зависимости от вашего подхода к обработке ошибок
+    }
     return user.balance.toFixed(2);
   }
 
