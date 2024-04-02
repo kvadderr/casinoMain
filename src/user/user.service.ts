@@ -34,7 +34,7 @@ export class UserService {
     if (!user) {
       throw new Error('User not found'); // Или возвращать ошибку в зависимости от вашего подхода к обработке ошибок
     }
-    return user.balance.toFixed(2);
+    return user.balance;
   }
 
   async findOneById(id: string): Promise<UserResponse> {
@@ -70,5 +70,11 @@ export class UserService {
     user.balance += transfer.cost;
     await this.saveUser(user);
     return { success: true, message: "Операция выполнена успешно" };
+  }
+
+  async changeBalance(id: string, balance: number) {
+    const user = await this.findOneById(id);
+    user.balance = balance;
+    this.saveUser(user)
   }
 }

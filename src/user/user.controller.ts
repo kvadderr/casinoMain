@@ -16,6 +16,7 @@ export class UserController {
   @Post()
   async userDataControl(@Body() data: any) {
     const cmd = data.cmd;
+    const balance = await this.userService.getBalance(cmd.login);
     if (data.key !== process.env.HALL_KEY) return (
       {
         "status": "fail",
@@ -23,7 +24,7 @@ export class UserController {
       }
     )
     if (cmd === 'getBalance') {
-      const balance = await this.userService.getBalance(cmd.login);
+
       return ({
         "status": "success",
         "error": "",
@@ -34,12 +35,19 @@ export class UserController {
     }
 
     if (cmd === 'writeBet') {
-      const balance = await this.userService.getBalance(cmd.login);
+      if (balance < data.bet) {
+        return ({
+          "status": "fail",
+          "error": "ERROR CODE"
+        })
+      }
+      const newBalance = balance - data.bet + data.win;
+      this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",
         "error": "",
         "login": cmd.login,
-        "balance": balance,
+        "balance": newBalance,
         "currency": "RUB"
       })
     }
