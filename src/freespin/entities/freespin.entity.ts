@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from "@nestjs/swagger"
 
-@Entity('user')
+@Entity('freespin')
 export class Freespin {
 
   @ApiProperty({ example: 1 })
