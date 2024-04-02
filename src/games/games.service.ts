@@ -49,6 +49,8 @@ export class GamesService {
       requestBody.bm = bmField
     }
 
+    console.log(requestBody)
+
     const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
     return response.data
   }
