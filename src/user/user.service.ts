@@ -19,10 +19,10 @@ export class UserService {
     try {
       const user = await this.usersRepository.save(createUserDto)
       console.log('user', user)
+      return user
     } catch (e) {
       console.log(e)
     }
-    return user
   }
 
   findAll() {
