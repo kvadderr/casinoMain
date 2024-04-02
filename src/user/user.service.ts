@@ -15,10 +15,14 @@ export class UserService {
   ) { }
 
   async saveUser(createUserDto: Partial<User>) {
+    try {
     console.log('createUserDto', createUserDto)
     const user = await this.usersRepository.save(createUserDto)
     console.log(user)
-    return user
+    return user }
+    catch (e) {
+      console.log(e)
+    }
   }
 
   findAll() {
