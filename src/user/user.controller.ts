@@ -18,6 +18,7 @@ export class UserController {
     const cmd = data.cmd;
     console.log('data', data)
     const balance = await this.userService.getBalance(data.login);
+    console.log('balance', balance)
     if (data.key !== process.env.HALL_KEY) return (
       {
         "status": "fail",
