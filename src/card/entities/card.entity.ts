@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import { ApiProperty } from "@nestjs/swagger"
 
-@Entity('freespin')
-export class Freespin {
+@Entity('card')
+export class Card {
 
   @ApiProperty({ example: 1 })
   @PrimaryGeneratedColumn('uuid')
@@ -16,14 +16,10 @@ export class Freespin {
 
   @ApiProperty({ example: 123 })
 	@Column()
-	gameId: string
+	cardNumber: number
 
   @ApiProperty({ example: 10 })
-	@Column({ default: 10 })
-	count: number
-
-  @ApiProperty({ example: 10.00 })
-	@Column({ default: 10.00 })
-	bet: number
+	@Column()
+	name: number
 
 }

@@ -22,7 +22,7 @@ export class FreespinService {
     return this.freespinRepository.find();
   }
 
-  findOne(gameId: number) {
+  findOne(gameId: string) {
     return this.freespinRepository.findOne({
       where: { gameId }
     })
@@ -45,6 +45,6 @@ export class FreespinService {
     if (result.affected === 0) {
       throw new Error(`Freespin with ID ${id} not found`);
     }
-    return { message: `Freespin with ID ${id} successfully removed` };
+    return { message: `Freespin with ID ${id} successfully removed`, id: id };
   }
 }

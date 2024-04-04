@@ -33,17 +33,12 @@ export class AuthController {
     if (existingUser) throw new BadRequestException('User already exists.')
     try {
       const saltRounds = 12;
-      console.log(saltRounds)
       const hashedPassword = await bcrypt.hash(password, saltRounds);
-      console.log(hashedPassword)
-      console.log('registerUserDto', registerUserDto)
       const user = await this.userService.saveUser({
         ...registerUserDto,
         password: hashedPassword,
       });
-      console.log(user)
       const { id, role } = user;
-      console.log(id)
       const tokens = this.authService.assignTokens(id, role);
       return tokens;
     } catch (error) {

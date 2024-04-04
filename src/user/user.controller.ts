@@ -63,6 +63,11 @@ export class UserController {
     }
   }
 
+  @Post('/populate')
+  async populate(@Body() sendMoneyDTO: SendMoneyDTO) {
+      return await this.userService.changeBalance(sendMoneyDTO.userId, sendMoneyDTO.cost)
+  }
+
   @Post('/sendMoney')
   async setMoney(@Req() req, @Body() sendMoneyDTO: SendMoneyDTO) {
     if (req.user?.balance === 0 || req.user?.balance < sendMoneyDTO.cost) return new BadGatewayException(`Недостаточно средств`);

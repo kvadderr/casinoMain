@@ -6,13 +6,15 @@ import { getLinkDTO } from './decorators/getLink.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FreespinService } from 'src/freespin/freespin.service';
 import { OpenGameRequest } from './decorators/openGame.dto';
+import { GameHistoryService } from 'src/game-history/game-history.service';
 
 @Injectable()
 export class GamesService {
 
   constructor(
     private readonly redisService: RedisService,
-    private readonly freespinService: FreespinService
+    private readonly freespinService: FreespinService,
+    private readonly gameHistoryService: GameHistoryService
   ) { }
 
   @Cron('0 */30 * * * *') // Запускается каждые 30 минут
@@ -23,7 +25,7 @@ export class GamesService {
       cmd: "gamesList"
     };
     const response = await axios.post(process.env.HALL_API, requestBody);
-    await this.redisService.set('apiData', JSON.stringify(response.data));
+    await this.redisService.set('apiData', JSON.stringify(response.data.content.gameList));
   }
 
   async getData() {
@@ -49,9 +51,13 @@ export class GamesService {
       requestBody.bm = bmField
     }
 
-    console.log(requestBody)
 
     const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
+    const result = response.data;
+    this.gameHistoryService.create({
+      userId: data.userId,
+      sessionId: result.gameRes.sessionId
+    })
     return response.data
   }
 

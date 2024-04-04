@@ -4,7 +4,7 @@ export interface OpenGameRequest {
   language: string;
   key: string;
   demo: number;
-  login: number;
-  gameId: number;
+  login: string;
+  gameId: string;
   bm?: string;
 }

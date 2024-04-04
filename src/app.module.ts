@@ -12,6 +12,10 @@ import { FreespinModule } from './freespin/freespin.module';
 
 import { User } from './user/entities/user.entity';
 import { Freespin } from './freespin/entities/freespin.entity';
+import { CardModule } from './card/card.module';
+import { Card } from './card/entities/card.entity';
+import { GameHistoryModule } from './game-history/game-history.module';
+import { GameHistory } from './game-history/entities/game-history.entity';
 
 @Module({
   imports: [
@@ -28,7 +32,9 @@ import { Freespin } from './freespin/entities/freespin.entity';
       username: 'postgres',
       entities: [
         User,
-        Freespin
+        Freespin,
+        Card,
+        GameHistory
       ],
       database: 'casino',
       synchronize: true,
@@ -37,6 +43,8 @@ import { Freespin } from './freespin/entities/freespin.entity';
     UsersModule,
     GamesModule,
     FreespinModule,
+    CardModule,
+    GameHistoryModule,
   ],
   controllers: [],
   providers: [GamesService, RedisService],

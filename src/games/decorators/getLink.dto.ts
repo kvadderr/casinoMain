@@ -1,4 +1,4 @@
 export class getLinkDTO {
-  userId: number;
-  gameId: number;
+  userId: string;
+  gameId: string;
 }

@@ -19,7 +19,7 @@ export class FreespinController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.freespinService.findOne(+id);
+    return this.freespinService.findOne(id);
   }
 
   @Patch(':id')

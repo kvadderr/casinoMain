@@ -16,10 +16,8 @@ export class UserService {
 
   async saveUser(createUserDto: Partial<User>) {
     try {
-    console.log('createUserDto', createUserDto)
-    const user = await this.usersRepository.save(createUserDto)
-    console.log(user)
-    return user }
+      return  await this.usersRepository.save(createUserDto)
+    }
     catch (e) {
       console.log(e)
     }
@@ -74,7 +72,8 @@ export class UserService {
 
   async changeBalance(id: string, balance: number) {
     const user = await this.findOneById(id);
-    user.balance = balance;
+    user.balance = user.balance + balance;
     this.saveUser(user)
+    return user
   }
 }

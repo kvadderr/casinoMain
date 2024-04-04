@@ -1,5 +1,5 @@
 export class CreateFreespinDto {
-  gameId: number
+  gameId: string
 	count: number
 	bet: number
 }
