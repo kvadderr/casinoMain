@@ -29,7 +29,7 @@ export class User {
 	referral: User
 
 	@ApiProperty({ example: 100 })
-	@Column({ default: 200 })
+	@Column({ type: 'double precision', default: 200 })
 	balance: number
 
   @ApiProperty({ example: UserRole.USER })
