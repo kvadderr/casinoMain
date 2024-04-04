@@ -25,11 +25,17 @@ export class GamesService {
       cmd: "gamesList"
     };
     const response = await axios.post(process.env.HALL_API, requestBody);
+    await this.redisService.set('gameLabels', JSON.stringify(response.data.content.gameLabels));
     await this.redisService.set('apiData', JSON.stringify(response.data.content.gameList));
   }
 
   async getData() {
     const cachedData = await this.redisService.get('apiData');
+    return cachedData ? JSON.parse(cachedData) : null;
+  }
+
+  async getProviders() {
+    const cachedData = await this.redisService.get('gameLabels');
     return cachedData ? JSON.parse(cachedData) : null;
   }
 

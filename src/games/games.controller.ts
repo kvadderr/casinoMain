@@ -12,6 +12,11 @@ export class GamesController {
     return await this.gamesService.getData();
   }
 
+  @Get('/providers')
+  async getProviders() {
+    return await this.gamesService.getProviders();
+  }
+
   @Post('/gameLink')
   async getGameLink(@Body() getLink: getLinkDTO) {
     return await this.gamesService.openGame(getLink);
