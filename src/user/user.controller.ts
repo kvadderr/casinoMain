@@ -28,7 +28,7 @@ export class UserController {
       return ({
         "status": "success",
         "error": "",
-        "login": cmd.login,
+        "login": data.login,
         "balance": balance,
         "currency": "RUB"
       })
@@ -46,7 +46,7 @@ export class UserController {
       return ({
         "status": "success",
         "error": "",
-        "login": cmd.login,
+        "login": data.login,
         "balance": newBalance,
         "currency": "RUB"
       })
