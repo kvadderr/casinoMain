@@ -16,6 +16,7 @@ export class UserController {
   @Post()
   async userDataControl(@Body() data: any) {
     const cmd = data.cmd;
+    console.log('cmd', cmd)
     const balance = await this.userService.getBalance(cmd.login);
     if (data.key !== process.env.HALL_KEY) return (
       {
@@ -24,7 +25,6 @@ export class UserController {
       }
     )
     if (cmd === 'getBalance') {
-
       return ({
         "status": "success",
         "error": "",
