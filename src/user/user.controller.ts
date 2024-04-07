@@ -42,7 +42,8 @@ export class UserController {
           "error": "ERROR CODE"
         })
       }
-      const newBalance = balance - data.bet + data.win;
+      const newBalance = balance - +data.bet + +data.win;
+      
       this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",
