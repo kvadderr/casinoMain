@@ -73,7 +73,7 @@ export class UserService {
   async changeBalance(id: string, balance: number) {
     const user = await this.findOneById(id);
     console.log('user balance before', user.balance)
-    user.balance = user.balance + balance;
+    user.balance = balance;
     console.log('user balance after', user.balance)
     this.saveUser(user)
     return user
