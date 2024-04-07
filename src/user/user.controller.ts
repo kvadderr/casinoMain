@@ -30,7 +30,7 @@ export class UserController {
         "status": "success",
         "error": "",
         "login": data.login,
-        "balance": balance,
+        "balance": balance.toFixed(2),
         "currency": "RUB"
       }
       console.log(response)
