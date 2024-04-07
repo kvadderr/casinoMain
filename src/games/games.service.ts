@@ -52,6 +52,8 @@ export class GamesService {
       gameId: data.gameId
     }
 
+    console.log(requestBody)
+
     if (freespin) {
       let bmField = `${freespin.count}|${freespin.bet}`;
       requestBody.bm = bmField
