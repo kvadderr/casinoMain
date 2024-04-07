@@ -44,8 +44,10 @@ export class UserController {
           "error": "ERROR CODE"
         })
       }
+      console.log('balance', balance)
+      console.log(data)
       const newBalance = balance - +data.bet + +data.win;
-
+      console.log(newBalance)
       this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",
