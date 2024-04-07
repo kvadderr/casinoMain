@@ -26,13 +26,15 @@ export class UserController {
       }
     )
     if (cmd === 'getBalance') {
-      return ({
+      const response = {
         "status": "success",
         "error": "",
         "login": data.login,
         "balance": balance,
         "currency": "RUB"
-      })
+      }
+      console.log(response)
+      return response
     }
 
     if (cmd === 'writeBet') {
@@ -43,7 +45,7 @@ export class UserController {
         })
       }
       const newBalance = balance - +data.bet + +data.win;
-      
+
       this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",
@@ -67,7 +69,7 @@ export class UserController {
 
   @Post('/populate')
   async populate(@Body() sendMoneyDTO: SendMoneyDTO) {
-      return await this.userService.changeBalance(sendMoneyDTO.userId, sendMoneyDTO.cost)
+    return await this.userService.changeBalance(sendMoneyDTO.userId, sendMoneyDTO.cost)
   }
 
   @Post('/sendMoney')
