@@ -18,7 +18,6 @@ export class UserController {
     const cmd = data.cmd;
     console.log('data', data)
     const balance = await this.userService.getBalance(data.login);
-    console.log('balance', balance)
     if (data.key !== process.env.HALL_KEY) return (
       {
         "status": "fail",
@@ -45,9 +44,11 @@ export class UserController {
         })
       }
       console.log('balance', balance)
-      console.log(data)
+      console.log('data.bet', data.bet)
+      console.log('data.win', data.win)
+      console.log('data.win', data.win)
       const newBalance = balance - +data.bet + +data.win;
-      console.log(newBalance)
+      console.log('newBalance', newBalance)
       this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",
