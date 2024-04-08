@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FreespinService } from 'src/freespin/freespin.service';
 import { OpenGameRequest } from './decorators/openGame.dto';
 import { GameHistoryService } from 'src/game-history/game-history.service';
+import { error } from 'console';
 
 @Injectable()
 export class GamesService {
@@ -64,7 +65,7 @@ export class GamesService {
       const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
       const result = response.data.content;
       console.log(result)
-      this.gameHistoryService.create({
+      if (result.error !==  "") this.gameHistoryService.create({
         userId: data.userId,
         sessionId: result.gameRes.sessionId
       })
