@@ -41,33 +41,35 @@ export class GamesService {
 
   async openGame(data: getLinkDTO) {
 
-    const freespin = await this.freespinService.findOne(data.gameId);
-    const requestBody: OpenGameRequest = {
-      cmd: "openGame",
-      hall: process.env.HALL_ID,
-      language: "ru",
-      key: process.env.HALL_KEY,
-      demo: 0,
-      login: data.userId,
-      gameId: data.gameId
-    }
+    try {
+      const freespin = await this.freespinService.findOne(data.gameId);
+      const requestBody: OpenGameRequest = {
+        cmd: "openGame",
+        hall: process.env.HALL_ID,
+        language: "ru",
+        key: process.env.HALL_KEY,
+        demo: 0,
+        login: data.userId,
+        gameId: data.gameId
+      }
 
-    console.log(requestBody)
+      console.log(requestBody)
 
-    if (freespin) {
-      let bmField = `${freespin.count}|${freespin.bet}`;
-      requestBody.bm = bmField
-    }
+      if (freespin) {
+        let bmField = `${freespin.count}|${freespin.bet}`;
+        requestBody.bm = bmField
+      }
 
 
-    const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
-    const result = response.data.content;
-    console.log(result)
-    this.gameHistoryService.create({
-      userId: data.userId,
-      sessionId: result.gameRes.sessionId
-    })
-    return response.data
+      const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
+      const result = response.data.content;
+      console.log(result)
+      this.gameHistoryService.create({
+        userId: data.userId,
+        sessionId: result.gameRes.sessionId
+      })
+      return response.data
+    } catch { }
   }
 
 }
