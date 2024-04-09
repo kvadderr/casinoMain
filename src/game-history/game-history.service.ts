@@ -4,6 +4,7 @@ import { UpdateGameHistoryDto } from './dto/update-game-history.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GameHistory } from './entities/game-history.entity';
 import { Repository } from 'typeorm';
+import axios from 'axios';
 
 @Injectable()
 export class GameHistoryService {
@@ -25,6 +26,24 @@ export class GameHistoryService {
     return this.freespinRepository.findOne({
       where: {userId}
     });
+  }
+
+
+  async getLogsBySession(sessionId: number){
+    try {
+      const requestBody = {
+        cmd: "gameSessionsLog",
+        hall: process.env.HALL_ID,
+        key: process.env.HALL_KEY,
+        sessionsId: sessionId,
+      }
+
+      console.log(requestBody)
+
+    
+   
+      return 
+    } catch { }
   }
 
 }

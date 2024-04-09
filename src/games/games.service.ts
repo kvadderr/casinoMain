@@ -26,6 +26,8 @@ export class GamesService {
       cmd: "gamesList"
     };
     const response = await axios.post(process.env.HALL_API, requestBody);
+    await this.redisService.del('gameLabels');
+    await this.redisService.del('apiData');
     await this.redisService.set('gameLabels', JSON.stringify(response.data.content.gameLabels));
     await this.redisService.set('apiData', JSON.stringify(response.data.content.gameList));
   }
@@ -65,7 +67,7 @@ export class GamesService {
       const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
       const result = response.data.content;
       console.log(result)
-      if (result.error ===  "") this.gameHistoryService.create({
+      if (result.error === "") this.gameHistoryService.create({
         userId: data.userId,
         sessionId: result.gameRes.sessionId
       })
