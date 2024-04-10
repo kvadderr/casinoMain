@@ -17,6 +17,11 @@ export class GameHistoryController {
     return this.gameHistoryService.findAll();
   }
 
+  @Get('/logs')
+  getLogs() {
+    return this.gameHistoryService.findAll();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gameHistoryService.findOne(id);

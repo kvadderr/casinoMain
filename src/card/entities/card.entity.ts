@@ -16,7 +16,7 @@ export class Card {
 
   @ApiProperty({ example: 123 })
 	@Column()
-	cardNumber: number
+	cardNumber: string
 
   @ApiProperty({ example: 10 })
 	@Column()

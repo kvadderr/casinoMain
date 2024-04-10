@@ -1,5 +1,5 @@
 export class CreateCardDto {
   id: string
-	cardNumber: number
+	cardNumber: string
 	name: number
 }
