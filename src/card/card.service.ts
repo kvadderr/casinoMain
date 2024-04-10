@@ -17,6 +17,12 @@ export class CardService {
     return this.cardRepository.save(createCardDto)
   }
 
+  async deactivate(id: string) {
+    const card = await this.cardRepository.findOne({ where: { id } })
+    card.isActive = false
+    return this.cardRepository.save(card)
+  }
+
   findAll() {
     return this.cardRepository.find();
   }

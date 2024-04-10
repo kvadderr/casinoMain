@@ -19,6 +19,6 @@ export class CardController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cardService.remove(+id);
+    return this.cardService.deactivate(id);
   }
 }

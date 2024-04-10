@@ -15,11 +15,15 @@ export class Card {
   id: string
 
   @ApiProperty({ example: 123 })
-	@Column()
-	cardNumber: string
+  @Column()
+  cardNumber: string
 
   @ApiProperty({ example: 10 })
-	@Column()
-	name: number
+  @Column()
+  name: string
+
+  @ApiProperty({ example: 10 })
+  @Column({ default: true })
+  isActive: boolean
 
 }
