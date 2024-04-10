@@ -29,7 +29,7 @@ export class GameHistoryService {
   }
 
 
-  async getLogsBySession(sessionId: number){
+  async getLogsBySession(sessionId: string){
     try {
       const requestBody = {
         cmd: "gameSessionsLog",
@@ -38,12 +38,9 @@ export class GameHistoryService {
         sessionsId: sessionId,
       }
 
-      console.log(requestBody)
-
-    
-   
-      return 
-    } catch { }
+      const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
+      return response.data
+    } catch { return }
   }
 
 }

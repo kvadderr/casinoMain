@@ -24,6 +24,6 @@ export class GameHistoryController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.gameHistoryService.findOne(id);
+    return this.gameHistoryService.getLogsBySession(id);
   }
 }
