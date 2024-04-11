@@ -6,6 +6,8 @@ import {
   ForbiddenException,
   UseInterceptors,
   BadRequestException,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginResponse } from './type/loginResponse';
@@ -15,6 +17,7 @@ import { LoginUserDto } from './dto/loginUser.dto';
 import { UserService } from '../user/user.service';
 import { CookieInterceptor } from './interceptor/cookie.interceptor';
 import { RegisterUserDto } from './dto/registerUser.dto';
+import { CodeCheckDto } from './dto/codeCheck.dto';
 
 @UseInterceptors(CookieInterceptor)
 @Controller('/auth')
@@ -24,14 +27,21 @@ export class AuthController {
     private readonly userService: UserService,
   ) { }
 
-  @Post('register')
+  @Post('sign')
   async registerUser(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<LoginResponse> {
     const { email, phone, password } = registerUserDto;
     const existingUser = await this.userService.findOneByCredentials(email, phone);
-    if (existingUser) throw new BadRequestException('User already exists.')
-    try {
+    if (existingUser) {
+      console.log('Пользователь существует')
+      let isValid = await bcrypt.compare(password, existingUser.password);
+      if (!isValid) { throw new ForbiddenException('login or password is invalid') }
+      const { id, role } = existingUser;
+      const tokens = this.authService.assignTokens(id, role);
+      return tokens;
+    } else {
+      console.log('Пользователь создается')
       const saltRounds = 12;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const user = await this.userService.saveUser({
@@ -41,9 +51,18 @@ export class AuthController {
       const { id, role } = user;
       const tokens = this.authService.assignTokens(id, role);
       return tokens;
-    } catch (error) {
-      throw new BadRequestException('Failed to register user.');
     }
+  }
+
+
+  @Post('checkCode')
+  async checkCode(@Body() codeCheck: CodeCheckDto, @Res() response) {
+    if (codeCheck.code === 123456) return response.status(HttpStatus.OK).json({
+      status: 'success',
+      message: 'Код успешно проверен',
+    });
+
+    else throw new ForbiddenException('Invalid code')
   }
 
   @Post('login')
