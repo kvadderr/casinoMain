@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGameHistoryDto } from './dto/create-game-history.dto';
-import { UpdateGameHistoryDto } from './dto/update-game-history.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GameHistory } from './entities/game-history.entity';
 import { Repository } from 'typeorm';
@@ -28,7 +27,6 @@ export class GameHistoryService {
     });
   }
 
-
   async getLogsBySession(sessionId: string){
     try {
       const requestBody = {
@@ -37,7 +35,6 @@ export class GameHistoryService {
         key: process.env.HALL_KEY,
         sessionsId: sessionId,
       }
-
       const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
       return response.data
     } catch { return }

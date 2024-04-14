@@ -29,39 +29,70 @@ export class AuthController {
 
   @Post('sign')
   async registerUser(
-    @Body() registerUserDto: RegisterUserDto,
-  ): Promise<LoginResponse> {
-    const { email, phone, password } = registerUserDto;
-    const existingUser = await this.userService.findOneByCredentials(email, phone);
-    if (existingUser) {
-      console.log('Пользователь существует')
-      let isValid = await bcrypt.compare(password, existingUser.password);
-      if (!isValid) { throw new ForbiddenException('login or password is invalid') }
+    @Body() loginUserDto: LoginUserDto,
+    @Res() response
+  ) {
+    const { login, password } = loginUserDto;
+    let existingUser = await this.userService.findOneByOneCredentials(login);
+    const isEmail = this.isEmail(login);
+
+    if (isEmail) {
+      console.log(existingUser)
+      if (existingUser) {
+        let isValid = await bcrypt.compare(password, existingUser.password);
+        if (!isValid) throw new ForbiddenException('Login or password is invalid');
+      } else {
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        existingUser = await this.userService.saveUser({
+          email: login,
+          password: hashedPassword,
+        });
+      }
+      console.log(existingUser)
       const { id, role } = existingUser;
       const tokens = this.authService.assignTokens(id, role);
-      return tokens;
-    } else {
-      console.log('Пользователь создается')
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const user = await this.userService.saveUser({
-        ...registerUserDto,
-        password: hashedPassword,
+      console.log(tokens)
+      return response.status(HttpStatus.OK).json({
+        status: 'success',
+        accessToken: tokens.accessToken, // Assuming this is the desired message for all non-email logins
       });
-      const { id, role } = user;
-      const tokens = this.authService.assignTokens(id, role);
-      return tokens;
+    }
+    if (!isEmail) {
+
+      if (!existingUser) {
+        existingUser = await this.userService.saveUser({
+          phone: login,
+        });
+      }
+
+      return response.status(HttpStatus.OK).json({
+        status: 'success',
+        message: 'Код успешно отправлен', // Assuming this is the desired message for all non-email logins
+      });
+
     }
   }
 
 
+  private isEmail(login: string): boolean {
+    // Simple regex for demonstration; consider using a more robust method for email validation
+    return /\S+@\S+\.\S+/.test(login);
+  }
+
   @Post('checkCode')
   async checkCode(@Body() codeCheck: CodeCheckDto, @Res() response) {
-    if (codeCheck.code === 123456) return response.status(HttpStatus.OK).json({
-      status: 'success',
-      message: 'Код успешно проверен',
-    });
-
+    if (codeCheck.code === 123456) {
+      let existingUser = await this.userService.findOneByCredentials(null, codeCheck.phone);
+      if (!existingUser) throw new ForbiddenException('phone is invalid');
+      const { id, role } = existingUser;
+      const tokens = this.authService.assignTokens(id, role);
+      return response.status(HttpStatus.OK).json({
+        status: 'success',
+        accessToken: tokens.accessToken,
+        message: 'Код успешно проверен',
+      });
+    }
     else throw new ForbiddenException('Invalid code')
   }
 
@@ -71,11 +102,9 @@ export class AuthController {
     let existingUser: Omit<User, 'createdAt' | 'updatedAt'>;
     let isValid: boolean;
     existingUser = await this.userService.findOneByOneCredentials(login);
-    if (!existingUser) {
-      throw new ForbiddenException('Username or password is invalid');
-    }
+    if (!existingUser) throw new ForbiddenException('Username or password is invalid');
     isValid = await bcrypt.compare(password, existingUser.password);
-    if (!isValid) { throw new ForbiddenException('Username or password is invalid') }
+    if (!isValid) throw new ForbiddenException('Username or password is invalid')
     const { id, role } = existingUser;
     const tokens = this.authService.assignTokens(id, role);
     return tokens;

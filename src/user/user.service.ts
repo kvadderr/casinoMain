@@ -29,9 +29,7 @@ export class UserService {
 
   async getBalance(id: string) {
     const user = await this.findOneById(id);
-    if (!user) {
-      throw new Error('User not found'); // Или возвращать ошибку в зависимости от вашего подхода к обработке ошибок
-    }
+    if (!user) throw new Error('User not found');
     return user.balance;
   }
 
@@ -47,12 +45,14 @@ export class UserService {
         { email },
         { phone }
       ],
+      select: ['password', 'id', 'role']
     });
   }
 
   async findOneByOneCredentials(credentials: string): Promise<User> {
     return await this.usersRepository.findOne({
       where: [{ email: credentials }, { phone: credentials }],
+      select: ['password', 'id', 'role']
     });
   }
 

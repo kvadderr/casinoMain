@@ -12,11 +12,9 @@ export class UserController {
     return this.userService.findAll();
   }
 
-
   @Post()
   async userDataControl(@Body() data: any) {
     const cmd = data.cmd;
-    console.log('data', data)
     const balance = await this.userService.getBalance(data.login);
     if (data.key !== process.env.HALL_KEY) return (
       {
@@ -43,12 +41,7 @@ export class UserController {
           "error": "ERROR CODE"
         })
       }
-      console.log('balance', balance)
-      console.log('data.bet', data.bet)
-      console.log('data.win', data.win)
-      console.log('data.win', data.win)
       const newBalance = balance - +data.bet + +data.win;
-      console.log('newBalance', newBalance)
       this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",

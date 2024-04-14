@@ -8,7 +8,6 @@ import {
 import { ApiProperty } from "@nestjs/swagger"
 import { UserRole } from 'src/constants';
 
-
 @Entity('user')
 export class User {
 
@@ -48,6 +47,10 @@ export class User {
 	@Column({ nullable: true })
 	email: string
 
+	@ApiProperty({ example: false })
+	@Column({ default: false })
+	isBan: boolean
+
 	@ApiProperty({ example: 1532412312, nullable: true })
 	@Column({
 		nullable: true,
@@ -55,7 +58,12 @@ export class User {
 	telegram_id: number
 
 	@ApiProperty({ nullable: true })
-	@Column({ nullable: true })
+	@Column({ nullable: true, select: false})
 	password: string
+
+
+	@ApiProperty({ nullable: true })
+	@Column({ nullable: true, select: false })
+	secretCode: string
 
 }

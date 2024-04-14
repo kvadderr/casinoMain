@@ -16,6 +16,8 @@ import { CardModule } from './card/card.module';
 import { Card } from './card/entities/card.entity';
 import { GameHistoryModule } from './game-history/game-history.module';
 import { GameHistory } from './game-history/entities/game-history.entity';
+import { DocumentsModule } from './documents/documents.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { GameHistory } from './game-history/entities/game-history.entity';
     FreespinModule,
     CardModule,
     GameHistoryModule,
+    DocumentsModule,
+    MailModule
   ],
   controllers: [],
   providers: [GamesService, RedisService],
