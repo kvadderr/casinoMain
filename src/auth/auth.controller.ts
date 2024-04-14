@@ -34,7 +34,7 @@ export class AuthController {
   ) {
     const { login, password } = loginUserDto;
     let existingUser = await this.userService.findOneByOneCredentials(login);
-    const isNew = existingUser ? true : false
+    const isNew = existingUser ? false : true
     const isEmail = this.isEmail(login);
 
     if (isEmail) {
