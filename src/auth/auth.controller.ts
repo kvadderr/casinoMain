@@ -34,6 +34,7 @@ export class AuthController {
   ) {
     const { login, password } = loginUserDto;
     let existingUser = await this.userService.findOneByOneCredentials(login);
+    const isNew = existingUser ? true : false
     const isEmail = this.isEmail(login);
 
     if (isEmail) {
@@ -55,6 +56,7 @@ export class AuthController {
       console.log(tokens)
       return response.status(HttpStatus.OK).json({
         status: 'success',
+        isNew: isNew,
         accessToken: tokens.accessToken, // Assuming this is the desired message for all non-email logins
       });
     }
@@ -68,7 +70,8 @@ export class AuthController {
 
       return response.status(HttpStatus.OK).json({
         status: 'success',
-        message: 'Код успешно отправлен', // Assuming this is the desired message for all non-email logins
+        isNew: isNew,
+        message: 'Код успешно отправлен',
       });
 
     }
@@ -76,7 +79,6 @@ export class AuthController {
 
 
   private isEmail(login: string): boolean {
-    // Simple regex for demonstration; consider using a more robust method for email validation
     return /\S+@\S+\.\S+/.test(login);
   }
 
