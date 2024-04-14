@@ -29,15 +29,14 @@ export class AuthController {
 
   @Post('sign')
   async registerUser(
-    @Body() loginUserDto: LoginUserDto,
+    @Body() loginUserDto: RegisterUserDto,
     @Res() response
   ) {
-    const { login, password } = loginUserDto;
-    let existingUser = await this.userService.findOneByOneCredentials(login);
+    const { email, phone, password } = loginUserDto;
+    let existingUser = await this.userService.findOneByCredentials(email, phone);
     const isNew = existingUser ? false : true
-    const isEmail = this.isEmail(login);
-
-    if (isEmail) {
+  
+    if (email) {
       console.log(existingUser)
       if (existingUser) {
         let isValid = await bcrypt.compare(password, existingUser.password);
@@ -46,7 +45,7 @@ export class AuthController {
         const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         existingUser = await this.userService.saveUser({
-          email: login,
+          email,
           password: hashedPassword,
         });
       }
@@ -60,11 +59,11 @@ export class AuthController {
         accessToken: tokens.accessToken, // Assuming this is the desired message for all non-email logins
       });
     }
-    if (!isEmail) {
+    if (phone) {
 
       if (!existingUser) {
         existingUser = await this.userService.saveUser({
-          phone: login,
+          phone: phone,
         });
       }
 
