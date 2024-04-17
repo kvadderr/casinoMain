@@ -20,6 +20,10 @@ export class RedisService {
     return await this.client.get(key);
   }
 
+  async setCode(key, code) {
+    await this.client.setex(key, 300, code)
+  }
+
   async del(key: string) {
     await this.client.del(key)
   }

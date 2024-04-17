@@ -3,6 +3,7 @@ import { sign, verify } from 'jsonwebtoken';
 import { UserService } from '../user/user.service';
 import { AccessTokenPayload, RefreshTokenPayload } from './type/jwtPayload';
 import { UserRole } from 'src/constants';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -41,6 +42,25 @@ export class AuthService {
             user,
             ...tokens,
         };
+    }
+
+
+    async sendCode(phone: string, code: number) {
+        const url = 'https://api.iqsms.ru/messages/v2/send.json';
+        const body = {
+            "messages": [
+                {
+                    "phone": phone,
+                    "clientId": "1",
+                    "text": "Ваш код: " + code
+                }
+            ],
+            "login": "esZekad0504",
+            "password": "617404"
+        }
+        const response = await axios.post(url, body);
+        console.log(response)
+
     }
 
 }

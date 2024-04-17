@@ -18,6 +18,8 @@ import { UserService } from '../user/user.service';
 import { CookieInterceptor } from './interceptor/cookie.interceptor';
 import { RegisterUserDto } from './dto/registerUser.dto';
 import { CodeCheckDto } from './dto/codeCheck.dto';
+import { MailService } from 'src/mail/mail.service';
+import { RedisService } from 'src/redis/redis.service';
 
 @UseInterceptors(CookieInterceptor)
 @Controller('/auth')
@@ -25,6 +27,8 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
+    private readonly redisService: RedisService,
   ) { }
 
   @Post('sign')
@@ -37,7 +41,6 @@ export class AuthController {
     const isNew = existingUser ? false : true
   
     if (email) {
-      console.log(existingUser)
       if (existingUser) {
         let isValid = await bcrypt.compare(password, existingUser.password);
         if (!isValid) throw new ForbiddenException('Login or password is invalid');
@@ -48,8 +51,8 @@ export class AuthController {
           email,
           password: hashedPassword,
         });
+        this.mailService.mailConfirm(email)
       }
-      console.log(existingUser)
       const { id, role } = existingUser;
       const tokens = this.authService.assignTokens(id, role);
       console.log(tokens)
@@ -60,6 +63,10 @@ export class AuthController {
       });
     }
     if (phone) {
+
+      const code =  Math.floor(100000 + Math.random() * 900000);
+      this.authService.sendCode(phone, code)
+      this.redisService.setCode(phone, code)
 
       if (!existingUser) {
         existingUser = await this.userService.saveUser({
@@ -83,7 +90,10 @@ export class AuthController {
 
   @Post('checkCode')
   async checkCode(@Body() codeCheck: CodeCheckDto, @Res() response) {
-    if (codeCheck.code === 123456) {
+    const code = await this.redisService.get(codeCheck.phone)
+    console.log('code', code)
+    console.log(codeCheck.code)
+    if (codeCheck.code === code) {
       let existingUser = await this.userService.findOneByCredentials(null, codeCheck.phone);
       if (!existingUser) throw new ForbiddenException('phone is invalid');
       const { id, role } = existingUser;

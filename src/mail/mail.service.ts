@@ -6,20 +6,17 @@ import { UserResponse } from 'src/user/type/userResponse';
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(private mailerService: MailerService) { }
 
-  async mailConfirm(user: Partial<UserResponse>) {
-    console.log('user', user);
-    const link = process.env.BACKEND_URL + '/user/confirm/' + user.id;
-    console.log(link);
-    await this.mailerService.sendMail({
-      to: user.email,
-      subject: 'Welcome to Inxstock! Confirm your Email',
-      template: './activate',
-      context: {
-        linkConfirm: link,
-      },
-    });
+  async mailConfirm(mail: string) {
+    try {
+      console.log('send e,eail to', mail)
+      await this.mailerService.sendMail({
+        to: mail,
+        subject: 'Welcome to Lotos! Confirm your Email',
+        template: './activate'
+      });
+    } catch {}
   }
 
   async codeSend(user: Partial<UserResponse>, title: string, text: string) {
