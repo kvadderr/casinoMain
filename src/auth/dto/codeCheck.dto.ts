@@ -1,4 +1,4 @@
 export class CodeCheckDto {
   phone: string;
-  code: string;
+  code: number;
 }

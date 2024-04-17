@@ -93,7 +93,7 @@ export class AuthController {
     const code = await this.redisService.get(codeCheck.phone)
     console.log('code', code)
     console.log(codeCheck.code)
-    if (codeCheck.code === code) {
+    if (codeCheck.code.toString() === code) {
       let existingUser = await this.userService.findOneByCredentials(null, codeCheck.phone);
       if (!existingUser) throw new ForbiddenException('phone is invalid');
       const { id, role } = existingUser;
