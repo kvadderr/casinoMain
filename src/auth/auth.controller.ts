@@ -88,6 +88,38 @@ export class AuthController {
     return /\S+@\S+\.\S+/.test(login);
   }
 
+  @Post('/sendCode')
+  async sendCode(@Body() data,@Res() response) {
+    const code =  Math.floor(100000 + Math.random() * 900000);
+    this.redisService.setCode(data.email, code)
+    await this.mailService.codeSend(data.email, code.toString())
+    return response.status(HttpStatus.OK).json({
+      status: 'success',
+      message: 'Код успешно отправлен',
+    });
+  }
+
+  @Post('/restore') 
+  async restore(@Body() data: any, @Res() response) {
+    const code = await this.redisService.get(data.email)
+    console.log(code)
+    if (data.code.toString() === code) {
+      let existingUser = await this.userService.findOneByEmail(data.email);
+      const saltRounds = 12;
+      const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+      existingUser = await this.userService.saveUser({
+        password: hashedPassword,
+      });
+      const { id, role } = existingUser;
+      const tokens = this.authService.assignTokens(id, role);
+      return response.status(HttpStatus.OK).json({
+        status: 'success',
+        accessToken: tokens.accessToken
+      });
+    }
+    else throw new ForbiddenException('Invalid code')
+  }
+
   @Post('checkCode')
   async checkCode(@Body() codeCheck: CodeCheckDto, @Res() response) {
     const code = await this.redisService.get(codeCheck.phone)

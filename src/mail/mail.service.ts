@@ -19,14 +19,13 @@ export class MailService {
     } catch {}
   }
 
-  async codeSend(user: Partial<UserResponse>, title: string, text: string) {
+  async codeSend(email: string, code: string) {
     await this.mailerService.sendMail({
-      to: user.email,
-      subject: title,
+      to: email,
+      subject: "Восстановление пароля",
       template: './sendCode',
       context: {
-        code: user.secretCode,
-        text: text,
+        code: code,
       },
     });
   }
