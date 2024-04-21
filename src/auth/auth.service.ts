@@ -12,7 +12,7 @@ export class AuthService {
 
     createAccessToken({ userId, role }: AccessTokenPayload): string {
         return sign({ userId, role }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '15m',
+            expiresIn: '7d',
         });
     }
 
