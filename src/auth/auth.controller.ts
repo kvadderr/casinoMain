@@ -57,7 +57,7 @@ export class AuthController {
       return {
         status: 'success',
         isNew: isNew,
-        tokens
+        accessToken: tokens.accessToken 
       };
     }
     if (phone) {
