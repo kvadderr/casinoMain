@@ -90,7 +90,7 @@ export class AuthController {
   async sendCode(@Body() data, @Res() response) {
     const code = uuidv4();
     this.redisService.setCode(code, data.email)
-    await this.mailService.codeSend(data.email, "http://lotos.na4u.ru/restore?code=" + code.toString())
+    await this.mailService.codeSend(data.email, "http://lotos.na4u.ru/?restoreCode=" + code.toString())
     return response.status(HttpStatus.OK).json({
       status: 'success',
       message: 'Ссылка на восстановление успешно отправлена',
