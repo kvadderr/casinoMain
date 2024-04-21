@@ -67,7 +67,7 @@ export class GamesService {
       const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
       const result = response.data.content;
       console.log(result)
-      if (result.error === "") this.gameHistoryService.create({
+      if (result.gameRes) this.gameHistoryService.create({
         userId: data.userId,
         sessionId: result.gameRes.sessionId
       })
