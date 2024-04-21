@@ -20,6 +20,7 @@ import { RegisterUserDto } from './dto/registerUser.dto';
 import { CodeCheckDto } from './dto/codeCheck.dto';
 import { MailService } from 'src/mail/mail.service';
 import { RedisService } from 'src/redis/redis.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @UseInterceptors(CookieInterceptor)
 @Controller('/auth')
@@ -32,14 +33,11 @@ export class AuthController {
   ) { }
 
   @Post('sign')
-  async registerUser(
-    @Body() loginUserDto: RegisterUserDto,
-    @Res() response
-  ) {
+  async registerUser(@Body() loginUserDto: RegisterUserDto) {
     const { email, phone, password } = loginUserDto;
     let existingUser = await this.userService.findOneByCredentials(email, phone);
     const isNew = existingUser ? false : true
-  
+
     if (email) {
       if (existingUser) {
         let isValid = await bcrypt.compare(password, existingUser.password);
@@ -55,16 +53,16 @@ export class AuthController {
       }
       const { id, role } = existingUser;
       const tokens = this.authService.assignTokens(id, role);
-      console.log(tokens)
-      return response.status(HttpStatus.OK).json({
+      console.log('return answe4r', tokens)
+      return {
         status: 'success',
         isNew: isNew,
-        accessToken: tokens.accessToken, // Assuming this is the desired message for all non-email logins
-      });
+        tokens
+      };
     }
     if (phone) {
-
-      const code =  Math.floor(100000 + Math.random() * 900000);
+      console.log('is phoner')
+      const code = Math.floor(100000 + Math.random() * 900000);
       this.authService.sendCode(phone, code)
       this.redisService.setCode(phone, code)
 
@@ -73,12 +71,12 @@ export class AuthController {
           phone: phone,
         });
       }
-
-      return response.status(HttpStatus.OK).json({
+      console.log('return answe4r #2')
+      return {
         status: 'success',
         isNew: isNew,
         message: 'Код успешно отправлен',
-      });
+      };
 
     }
   }
@@ -89,22 +87,21 @@ export class AuthController {
   }
 
   @Post('/sendCode')
-  async sendCode(@Body() data,@Res() response) {
-    const code =  Math.floor(100000 + Math.random() * 900000);
-    this.redisService.setCode(data.email, code)
-    await this.mailService.codeSend(data.email, code.toString())
+  async sendCode(@Body() data, @Res() response) {
+    const code = uuidv4();
+    this.redisService.setCode(code, data.email)
+    await this.mailService.codeSend(data.email, "http://lotos.na4u.ru/restore?code=" + code.toString())
     return response.status(HttpStatus.OK).json({
       status: 'success',
-      message: 'Код успешно отправлен',
+      message: 'Ссылка на восстановление успешно отправлена',
     });
   }
 
-  @Post('/restore') 
+  @Post('/restore')
   async restore(@Body() data: any, @Res() response) {
-    const code = await this.redisService.get(data.email)
-    console.log(code)
-    if (data.code.toString() === code) {
-      let existingUser = await this.userService.findOneByEmail(data.email);
+    const email = await this.redisService.get(data.code)
+    if (email !== null) {
+      let existingUser = await this.userService.findOneByEmail(email);
       const saltRounds = 12;
       const hashedPassword = await bcrypt.hash(data.password, saltRounds);
       existingUser = await this.userService.saveUser({
