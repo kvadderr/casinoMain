@@ -23,7 +23,7 @@ export class GameHistoryService {
   }
 
   findOne(userId: string) {
-    return this.freespinRepository.findOne({
+    return this.freespinRepository.find({
       where: {userId}
     });
   }
