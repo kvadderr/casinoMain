@@ -36,7 +36,8 @@ export class GameHistoryService {
         key: process.env.HALL_KEY,
         sessionsId: sessionId,
       }
-      const response = await axios.post(process.env.HALL_API + 'openGame/', requestBody);
+      console.log(requestBody)
+      const response = await axios.post(process.env.HALL_API, requestBody);
       return response.data
     } catch { return }
   }
