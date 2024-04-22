@@ -15,7 +15,7 @@ import {
           const res = context.switchToHttp().getResponse();
           const { tokens } = data;
   
-          res.cookie('refreshToken', tokens.refreshToken, {
+          res.cookie('refreshToken', tokens?.refreshToken, {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7, 
             path: '/api/auth/refresh-token', 

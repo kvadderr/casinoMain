@@ -14,7 +14,6 @@ export class GameHistoryService {
   ) { }
 
   create(createGameHistoryDto: CreateGameHistoryDto) {
-    console.log(createGameHistoryDto)
     return this.freespinRepository.save(createGameHistoryDto)
   }
 

@@ -6,13 +6,10 @@ import {
   JoinColumn
 } from 'typeorm';
 import { ApiProperty } from "@nestjs/swagger"
+import { AppEntity } from 'src/base/BaseEntity';
 
 @Entity('gameHistory')
-export class GameHistory {
-
-  @ApiProperty({ example: 1 })
-  @PrimaryGeneratedColumn('uuid')
-  id: string
+export class GameHistory extends AppEntity{
 
   @ApiProperty({ example: 123 })
 	@Column()

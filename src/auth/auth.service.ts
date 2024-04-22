@@ -59,8 +59,6 @@ export class AuthService {
             "password": "617404"
         }
         const response = await axios.post(url, body);
-        console.log(response)
-
     }
 
 }
