@@ -32,6 +32,14 @@ export class AuthController {
     private readonly redisService: RedisService,
   ) { }
 
+
+  @Post('check')
+  async checkRegister(@Body() loginUserDto: RegisterUserDto) {
+    const { email, phone } = loginUserDto;
+    let existingUser = await this.userService.findOneByCredentials(email, phone);
+    return existingUser ? true : false
+  }
+
   @Post('sign')
   async registerUser(@Body() loginUserDto: RegisterUserDto) {
     const { email, phone, password } = loginUserDto;
