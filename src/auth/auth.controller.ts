@@ -16,7 +16,7 @@ import { User } from 'src/user/entities/user.entity';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { UserService } from '../user/user.service';
 import { CookieInterceptor } from './interceptor/cookie.interceptor';
-import { RegisterUserDto } from './dto/registerUser.dto';
+import { CheckUserRegister, RegisterUserDto } from './dto/registerUser.dto';
 import { CodeCheckDto } from './dto/codeCheck.dto';
 import { MailService } from 'src/mail/mail.service';
 import { RedisService } from 'src/redis/redis.service';
@@ -34,7 +34,7 @@ export class AuthController {
 
 
   @Post('check')
-  async checkRegister(@Body() loginUserDto: RegisterUserDto) {
+  async checkRegister(@Body() loginUserDto: CheckUserRegister) {
     const { email, phone } = loginUserDto;
     let existingUser = await this.userService.findOneByCredentials(email, phone);
     return existingUser ? true : false
