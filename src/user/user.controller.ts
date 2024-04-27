@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Param, Req, NotFoundException, Unauthorize
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { SendMoneyDTO } from './decorators/sendMoney.dto';
+import { GameHistoryService } from 'src/game-history/game-history.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService, private readonly gameHistory: GameHistoryService) { }
 
   @Get()
   findAll() {
@@ -42,6 +43,7 @@ export class UserController {
         })
       }
       const newBalance = balance - +data.bet + +data.win;
+      this.gameHistory.changeIsStart(data.sessionId)
       this.userService.changeBalance(data.login, newBalance)
       return ({
         "status": "success",

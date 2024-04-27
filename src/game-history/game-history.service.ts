@@ -23,11 +23,23 @@ export class GameHistoryService {
 
   findOne(userId: string) {
     return this.freespinRepository.find({
-      where: {userId}
+      where: { userId, isStarted: true }
     });
   }
 
-  async getLogsBySession(sessionId: string){
+  async changeIsStart(sessionId: number) {
+    // Находим запись по sessionId
+    const gameHistory = await this.freespinRepository.findOne({
+      where: { sessionId }
+    });
+    if (!gameHistory) {
+      throw new Error('Game history not found.');
+    }
+    gameHistory.isStarted = true;
+    await this.freespinRepository.save(gameHistory);
+  }
+
+  async getLogsBySession(sessionId: string) {
     try {
       const requestBody = {
         cmd: "gameSessionsLog",
@@ -35,8 +47,8 @@ export class GameHistoryService {
         key: process.env.HALL_KEY,
         sessionsId: sessionId,
       }
-      console.log(requestBody)
       const response = await axios.post(process.env.HALL_API, requestBody);
+      console.log(response)
       return response.data
     } catch { return }
   }
