@@ -5,13 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { SendMoneyDTO } from './decorators/sendMoney.dto';
+import { SocketService } from 'src/gateway/gateway.service';
 
 @Injectable()
 export class UserService {
 
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>
+    private readonly usersRepository: Repository<User>,
+    private readonly socketService: SocketService
   ) { }
 
   async saveUser(createUserDto: Partial<User>) {
@@ -84,6 +86,7 @@ export class UserService {
     user.balance = balance;
     console.log('user balance after', user.balance)
     this.saveUser(user)
+    this.socketService.emitToUser(id, 'balanceUpdated', { balance: user.balance });
     return user
   }
 }

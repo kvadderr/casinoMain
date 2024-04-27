@@ -18,6 +18,8 @@ import { GameHistoryModule } from './game-history/game-history.module';
 import { GameHistory } from './game-history/entities/game-history.entity';
 import { DocumentsModule } from './documents/documents.module';
 import { MailModule } from './mail/mail.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -48,10 +50,11 @@ import { MailModule } from './mail/mail.module';
     CardModule,
     GameHistoryModule,
     DocumentsModule,
+    GatewayModule,
     MailModule
   ],
   controllers: [],
-  providers: [GamesService, RedisService],
+  providers: [GamesService, RedisService, AppGateway],
 })
 
 export class AppModule implements NestModule {
