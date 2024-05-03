@@ -66,8 +66,8 @@ export class UserController {
   }
 
   @Post('/findID')
-  async findOne(@Body() data): Promise<User> {
-   return await this.userService.findOneSend(data)
+  async findOne(@Body() data){
+   return await this.userService.findOneSend(data.credentials)
   }
 
   @Post('/populate')
