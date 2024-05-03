@@ -65,6 +65,11 @@ export class UserController {
     }
   }
 
+  @Post('/findID')
+  async findOne(@Body() data): Promise<User> {
+   return await this.userService.findOneSend(data)
+  }
+
   @Post('/populate')
   async populate(@Body() sendMoneyDTO: SendMoneyDTO) {
     return await this.userService.changeBalance(sendMoneyDTO.userId, sendMoneyDTO.cost)

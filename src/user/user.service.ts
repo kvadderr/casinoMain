@@ -51,6 +51,14 @@ export class UserService {
     });
   }
 
+
+  async findOneSend(credentials: string): Promise<User> {
+    return await this.usersRepository.findOne({
+      where: [{ email: credentials }, { phone: credentials }],
+      select: ['id']
+    });
+  }
+
   async findOneByEmail(email: string): Promise<User> {
     return await this.usersRepository.findOne({
       where: { email },
