@@ -21,7 +21,7 @@ export class User {
 
 	@ApiProperty({ example: 123, nullable: true })
 	@Column({ nullable: true })
-	referral_id: number
+	referral_id: string
 
 	@ManyToOne(() => User, { nullable: true })
 	@JoinColumn({ name: "referral_id" })
